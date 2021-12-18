@@ -1,0 +1,12 @@
+.playerCard {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    margin-left: -180px;;
+}
+
+.playerCard button {
+    margin: 1rem;
+    height: 3em;
+    width: 5em;
+}

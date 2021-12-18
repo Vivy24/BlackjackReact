@@ -1,0 +1,13 @@
+.card {
+	max-width:200px;
+	max-height:310px;
+	border-radius:10px;
+	border:solid 1px gray;
+	float: left;
+	margin: 9px;
+	position: relative;
+	font-size: 20px;
+	text-align: center;
+	background: white fixed;
+	line-height: 20px;
+}    

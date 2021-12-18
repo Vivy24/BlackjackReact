@@ -1,0 +1,10 @@
+.starting {
+    left      : 50%;
+    top       : 50%;
+    position  : absolute;
+    transform : translate(-50%, -50%); 
+    text-align: center;
+}
+.starting h3{
+    font-size: 4rem;
+}

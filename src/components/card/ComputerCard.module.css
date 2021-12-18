@@ -1,0 +1,7 @@
+.computerCard {
+    position: fixed;
+    width: 500px;
+    height: 200px;
+    left: 50%;
+    margin-left: -180px; /* Negative half of width. */
+}
