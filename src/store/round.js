@@ -8,7 +8,7 @@ const RoundContext = React.createContext({
     computerPoint:[],
     playerPoint:[],
     isDeal: false,
-    // addPlayerCard:()=>{},
+    addPlayerCard:()=>{},
     randomCard:()=>{},
     triggerDeal:()=>{},
     addResult:(addType)=>{}

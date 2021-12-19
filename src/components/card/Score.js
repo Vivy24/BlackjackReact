@@ -25,8 +25,8 @@ const Score = () => {
 
     return (
         <div>
-            <h2>Dealer Score: {dealScore()} </h2>
-            {<h2>Player Score: {playerScore()} </h2>}
+            <h2>Dealer Score: {roundCtx.isDeal ? dealScore() :0 } </h2>
+            {<h2>Player Score: {roundCtx.isDeal ? playerScore() :0} </h2>}
         </div>
     )
 }

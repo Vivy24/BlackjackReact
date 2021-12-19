@@ -22,7 +22,7 @@ const defaultRoundContext = {
 
 const roundReducer = (state, action) => {
   if (action.type === "RANDOM") {
-    let cards = [...state.cards];
+    const cards = [...state.cards];
     const updatedComputerCards = [];
     const computerCard1 = randomCard();
     const computerCard1Index = cards.indexOf(computerCard1)
@@ -55,16 +55,43 @@ const roundReducer = (state, action) => {
       isDeal: false,
     };
   }
-  // else if(action.type ==='ADD-PCARD'){
-  //     const updatedPlayerCard = [...state.playerCards]
-  //     const playerPoint = [...state.playerPoint]
-  //     const newCard = randomCard(state.existCards);
-  //     updatedPlayerCard.push(newCard);
-  //     if(newCard.point){
-  //        const updatedPlayerPoint = playerPoint.map(point=>point+=newCard.point);
-  //     }
-    
-  // }
+   else if(action.type ==='ADD-PCARD'){
+       const cards = [...state.cards];
+       const updatedPlayerCards = [...state.playerCards]
+       const playerScoring = [...state.playerPoint];
+       let updatedPlayerScore = []
+
+       const newCard = randomCard();
+       updatedPlayerCards.push(newCard);
+       cards.splice(updatedPlayerCards,1);
+
+       if (!newCard.point){
+        const point1 = playerScoring.map(point=>{
+            return point+=1;
+        })
+
+        const point2 = playerScoring.map(point=>{
+          return point+=10;
+       })
+
+       updatedPlayerScore = point1.concat(point2)
+       console.log(updatedPlayerScore);
+      }
+       else {
+        updatedPlayerScore = playerScoring.map((score)=>{
+          return score+=newCard.point
+        })
+       }
+       return {
+        cards:cards,
+        computerCards: state.computerCards,
+        playerCards: updatedPlayerCards,
+        computerPoint: state.computerPoint,
+        playerPoint: updatedPlayerScore,
+        isDeal: state.isDeal,
+       }  
+
+   }
    else if (action.type==='ADD-RESULTS'){
      if (action.cardtype === 'C'){
        const computerCards = [...state.computerCards]
@@ -163,7 +190,11 @@ const RoundProvider = props =>{
     const addResult = (addType) => {
       dispatchRoundAction({type:'ADD-RESULTS', cardtype:addType})
     }
-
+    
+    const addPlayerCard = () => {
+      dispatchRoundAction({type:'ADD-PCARD'})
+    }
+ 
     const roundContext = {
       cards: roundState.cards,
         computerCards: roundState.computerCards,
@@ -174,6 +205,7 @@ const RoundProvider = props =>{
         randomCard: randomCardToStart,
         triggerDeal: triggerDeal,
         addResult: addResult,
+        addPlayerCard: addPlayerCard
     }
 
     return <RoundContext.Provider value={roundContext}>
