@@ -1,16 +1,17 @@
 import React from 'react'
 
+
 const RoundContext = React.createContext({
-    existCards:[],
+    cards:[],
     computerCards:[],
     playerCards:[],
     computerPoint:[],
     playerPoint:[],
     isDeal: false,
-    addPlayerCard:()=>{},
+    // addPlayerCard:()=>{},
     randomCard:()=>{},
     triggerDeal:()=>{},
-    addResult:(addType)=>{}
+    // addResult:(addType)=>{}
     // resetRound:()=>{},
 })
 

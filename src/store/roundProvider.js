@@ -4,34 +4,15 @@ import {cardDesk} from './cardDeck'
 
 import RoundContext from './round'
 
-const randomCard = (existCardDesk) => {
-  let success = false;
-  do {
+const randomCard = () => {
     const randomIndex = Math.floor(Math.random() * 52)
     const randomizedCard = cardDesk[randomIndex];
   
-    const existCard = existCardDesk.find((card) => card.id === randomizedCard.id);
-    if (!existCard) {
-      if (!randomizedCard.point) {
-        return {
-          card: randomizedCard,
-          point: [1, 10],
-        };
-      }
-      return {
-        card: randomizedCard,
-        point: null,
-      };
-    }
-    console.log({success});
-  }
-  while(!success)
-
-  
+    return randomizedCard
 };
 
 const defaultRoundContext = {
-    existCard:[],
+    cards:cardDesk,
     computerCards:[],
     playerCards:[],
     computerPoint:[],
@@ -41,25 +22,32 @@ const defaultRoundContext = {
 
 const roundReducer = (state, action) => {
   if (action.type === "RANDOM") {
-    const existCardDesk = [];
+    let cards = [...state.cards];
     const updatedComputerCards = [];
-    const computerCard1 = randomCard(existCardDesk);
-    updatedComputerCards.push(computerCard1.card);
-    existCardDesk.push(computerCard1.card);
-    const computerCard2 = randomCard(existCardDesk);
-    updatedComputerCards.push(computerCard2.card);
-    existCardDesk.push(computerCard2.card);
+    const computerCard1 = randomCard();
+    const computerCard1Index = cards.indexOf(computerCard1)
+    updatedComputerCards.push(computerCard1);
+    cards.splice(computerCard1Index,1);
+
+    const computerCard2 = randomCard();
+    const computerCard2Index = cards.indexOf(computerCard2)
+    updatedComputerCards.push(computerCard2);
+    cards.splice(computerCard2Index,1);
+
     const updatedPlayerCards = [];
-    const playerCard1 = randomCard(existCardDesk);
-    updatedPlayerCards.push(playerCard1.card);
-    existCardDesk.push(playerCard1.card);
-    const playerCard2 = randomCard(existCardDesk);
-    updatedPlayerCards.push(playerCard2.card);
-    existCardDesk.push(playerCard2.card);
+    const playerCard1 = randomCard();
+    const playerCard1Index = cards.indexOf(playerCard1)
+    cards.splice(playerCard1Index,1);
+    updatedPlayerCards.push(playerCard1);
+
+    const playerCard2 = randomCard();
+    const playerCard2Index = cards.indexOf(playerCard2)
+    updatedPlayerCards.push(playerCard2);
+    cards.splice(playerCard2Index,1);
 
     
     return {
-      existCards:existCardDesk,
+      cards:cards,
       computerCards: updatedComputerCards,
       playerCards: updatedPlayerCards,
       computerPoint: [],
@@ -116,7 +104,7 @@ const roundReducer = (state, action) => {
   // }
   else if (action.type==="DEAL"){
       return {
-        existCards:state.existCards,
+        cards:state.cards,
         computerCards: state.computerCards,
         playerCards: state.playerCards,
         computerPoint: state.computerPoint,
@@ -143,7 +131,7 @@ const RoundProvider = props =>{
     }
 
     const roundContext = {
-      existCards: roundState.existCards,
+      cards: roundState.cards,
         computerCards: roundState.computerCards,
         playerCards: roundState.playerCards,
         computerPoint:roundState.computerPoint,
