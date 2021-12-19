@@ -11,7 +11,7 @@ const RoundContext = React.createContext({
     // addPlayerCard:()=>{},
     randomCard:()=>{},
     triggerDeal:()=>{},
-    // addResult:(addType)=>{}
+    addResult:(addType)=>{}
     // resetRound:()=>{},
 })
 

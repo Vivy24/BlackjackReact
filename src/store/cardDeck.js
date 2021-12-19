@@ -3,25 +3,21 @@ export const cardDesk = [
         id: 'a1',
         name:'A1',
         img:"img/cards/a1.png",
-        point: 0,
     },
     {
         id: 'a2',
         name:'A2',
         img:"img/cards/a2.png",
-        point:0,
     },
     {
         id: 'a3',
         name:'A3',
         img:"img/cards/a3.png",
-        point:0,
     },
     {
         id: 'a4',
         name:'A4',
         img:"img/cards/a4.png",
-        point:0,
     },
     {
         id: 'j1',

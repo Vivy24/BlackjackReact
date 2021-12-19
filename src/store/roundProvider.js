@@ -15,8 +15,8 @@ const defaultRoundContext = {
     cards:cardDesk,
     computerCards:[],
     playerCards:[],
-    computerPoint:[],
-    playerPoint:[],
+    computerPoint:[0],
+    playerPoint:[0],
     isDeal:false,
 }
 
@@ -50,8 +50,8 @@ const roundReducer = (state, action) => {
       cards:cards,
       computerCards: updatedComputerCards,
       playerCards: updatedPlayerCards,
-      computerPoint: [],
-      playerPoint: [],
+      computerPoint: state.computerPoint,
+      playerPoint: state.playerPoint,
       isDeal: false,
     };
   }
@@ -65,43 +65,77 @@ const roundReducer = (state, action) => {
   //     }
     
   // }
-  // else if (action.type==='ADD-RESULTS'){
-  //   if (action.cardtype === 'C'){
-  //     const computerCards = [...state.computerCards]
-  //     let computerPoints = [...state.computerPoint]
-  //     computerCards.forEach(card => {
-  //       if (!card.point){
-  //         const computerPoint1 = computerPoints.map(point=>{
-  //             return point+=1;
-  //         })
-  //         const computerPoint2 = computerPoints.map(point=>{
-  //           return point+=10;
-  //         })
-  //         computerPoints = computerPoint1.concat(computerPoint2);
-  //       }
-  //       else {
-  //         const computerPoint = computerPoints.map(point=>{
-  //           return point+=card.point
-  //         })
-  //         computerPoints = computerPoint;
-  //       }
-  //     })
-
-  //     return {
-  //       existCards:state.existCards,
-  //     computerCards: state.computerCards,
-  //     playerCards: state.playerCards,
-  //     computerPoint: computerPoints,
-  //     playerPoint: state.playerPoint,
-  //     isDeal: state.isDeal,
-  //     }
-  //   }
-    
-    // const playerCards = [...state.playerCards]
-    // let playerPoints = [...state.playerPoint]
-
+   else if (action.type==='ADD-RESULTS'){
+     if (action.cardtype === 'C'){
+       const computerCards = [...state.computerCards]
+       let computerPoints = [...state.computerPoint]
+       computerCards.forEach(card => {
+         if (!card.point){
+           const computerPoint1 = computerPoints.map(point=>{
+             console.log(point);
+               return point+=1;
+           })
   
-  // }
+           const computerPoint2 = computerPoints.map(point=>{
+             return point+=10;
+           })
+
+           computerPoints = computerPoint1.concat(computerPoint2);
+
+         }
+         else {
+           const computerPoint = computerPoints.map(point=>{
+             return point+=card.point
+           })
+           computerPoints = computerPoint;
+         }
+       })
+
+       return {
+       cards:state.cards,
+       computerCards: state.computerCards,
+       playerCards: state.playerCards,
+       computerPoint: computerPoints,
+       playerPoint: state.playerPoint,
+       isDeal: state.isDeal,
+       }
+     }
+    else{
+      const playerCards = [...state.playerCards]
+      let playerPoints = [...state.playerPoint]
+
+      playerCards.forEach(card => {
+        if (!card.point){
+          const playerPoint1 = playerPoints.map(point=>{
+              return point+=1;
+          })
+ 
+          const playerPoint2 = playerPoints.map(point=>{
+            return point+=10;
+          })
+
+          playerPoints = playerPoint1.concat(playerPoint2);
+
+        }
+        else {
+          const playerPoint = playerPoints.map(point=>{
+            return point+=card.point
+          })
+          playerPoints = playerPoint;
+        }
+      })
+
+      return {
+      cards:state.cards,
+      computerCards: state.computerCards,
+      playerCards: state.playerCards,
+      computerPoint: state.computerPoint,
+      playerPoint: playerPoints,
+      isDeal: state.isDeal,
+      }
+    }
+  
+   }
   else if (action.type==="DEAL"){
       return {
         cards:state.cards,
@@ -139,7 +173,7 @@ const RoundProvider = props =>{
         isDeal: roundState.isDeal,
         randomCard: randomCardToStart,
         triggerDeal: triggerDeal,
-        // addResult: addResult,
+        addResult: addResult,
     }
 
     return <RoundContext.Provider value={roundContext}>

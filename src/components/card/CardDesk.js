@@ -12,8 +12,8 @@ const CardDesk = () => {
     
     useEffect(()=>{
         roundCtx.randomCard();
-        // roundCtx.addResult('C');
-
+        roundCtx.addResult('C');
+        roundCtx.addResult('P');
         console.log(roundCtx);
     },[])
 
