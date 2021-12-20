@@ -47,43 +47,54 @@ const roundReducer = (state, action) => {
     cards.splice(playerCard2Index, 1);
 
     return {
-      cards: cards,
+      ...state,
+      cards,
       computerCards: updatedComputerCards,
       playerCards: updatedPlayerCards,
-      computerPoint: state.computerPoint,
-      playerPoint: state.playerPoint,
-      gameState: state.gameState,
     };
   } else if (action.type === "ADD-CARD") {
     const cards = [...state.cards];
     const updatedCards = [...action.storage];
-    const scores = [...action.point];
+    let scores = [...action.point];
+
     let updatedScore = [];
+    let validScores;
+    let drawMore = false;
+    do {
+      const newCard = randomCard();
+      updatedCards.push(newCard);
+      const newCardIndex = cards.indexOf(newCard);
+      cards.splice(newCardIndex, 1);
 
-    const newCard = randomCard();
-    updatedCards.push(newCard);
-    const newCardIndex = cards.indexOf(newCard);
-    cards.splice(newCardIndex, 1);
+      if (!newCard.point) {
+        const point1 = scores.map((point) => {
+          return (point += 1);
+        });
 
-    if (!newCard.point) {
-      const point1 = scores.map((point) => {
-        return (point += 1);
+        const point2 = scores.map((point) => {
+          return (point += 10);
+        });
+
+        updatedScore = point1.concat(point2);
+      } else {
+        updatedScore = scores.map((score) => {
+          return (score += newCard.point);
+        });
+      }
+
+      validScores = updatedScore.filter((score) => {
+        return score <= 21;
       });
+      drawMore =
+        (validScores.length === 1 && validScores[0] < 16) ||
+        (validScores.length > 1 && Math.max(...validScores) < 16);
 
-      const point2 = scores.map((point) => {
-        return (point += 10);
-      });
+      if (drawMore) {
+        scores = [...validScores];
+      }
+    } while (action.cardType === "C" && drawMore);
 
-      updatedScore = point1.concat(point2);
-    } else {
-      updatedScore = scores.map((score) => {
-        return (score += newCard.point);
-      });
-    }
-
-    const validScores = updatedScore.filter((score) => {
-      return score <= 21;
-    });
+    console.log({ validScores });
 
     if (action.cardType === "C") {
       return {
@@ -123,12 +134,8 @@ const roundReducer = (state, action) => {
       });
 
       return {
-        cards: state.cards,
-        computerCards: state.computerCards,
-        playerCards: state.playerCards,
+        ...state,
         computerPoint: computerPoints,
-        playerPoint: state.playerPoint,
-        gameState: state.gameState,
       };
     } else {
       const playerCards = [...state.playerCards];
@@ -154,57 +161,48 @@ const roundReducer = (state, action) => {
       });
 
       return {
-        cards: state.cards,
-        computerCards: state.computerCards,
-        playerCards: state.playerCards,
-        computerPoint: state.computerPoint,
+        ...state,
         playerPoint: playerPoints,
-        gameState: state.gameState,
       };
     }
   } else if (action.type === "DEAL") {
     return {
-      cards: state.cards,
-      computerCards: state.computerCards,
-      playerCards: state.playerCards,
-      computerPoint: state.computerPoint,
-      playerPoint: state.playerPoint,
+      ...state,
       gameState: "DEAL",
     };
   } else if (action.type === "STAND") {
     return {
-      cards: state.cards,
-      computerCards: state.computerCards,
-      playerCards: state.playerCards,
-      computerPoint: state.computerPoint,
-      playerPoint: state.playerPoint,
+      ...state,
       gameState: "STAND",
     };
   } else if (action.type === "WINNER") {
     const playerPoints = [...state.playerPoint];
     const computerPoints = [...state.computerPoint];
     let winner = "";
+    let finalPlayerPoint = 0;
+    let finalComputerPoint = 0;
+    if (playerPoints.length > 1) {
+      finalPlayerPoint = Math.max(...playerPoints);
+    } else if (playerPoints.length === 1) {
+      finalPlayerPoint = playerPoints[0];
+    }
 
-    if (playerPoints.length == 1 && computerPoints.length == 1) {
-      if (playerPoints[0] > computerPoints[0]) {
-        winner = "PLAYER";
-      } else if (playerPoints[0] < computerPoints[0]) {
-        winner = "COMPUTER";
-      } else {
-        winner = "DRAW";
-      }
+    if (computerPoints.length > 1) {
+      finalComputerPoint = Math.max(...computerPoints);
+    } else if (computerPoints.length === 1) {
+      finalComputerPoint = computerPoints[0];
+    }
+
+    if (finalPlayerPoint > finalComputerPoint) {
+      winner = "PLAYER";
+    } else if (finalPlayerPoint < finalComputerPoint) {
+      winner = "COMPUTER";
     } else {
-      // to do
-      console.log("Winner: array has more than 1");
+      winner = "DRAW";
     }
 
     return {
-      cards: state.cards,
-      computerCards: state.computerCards,
-      playerCards: state.playerCards,
-      computerPoint: state.computerPoint,
-      playerPoint: state.playerPoint,
-      gameState: state.gameState,
+      ...state,
       winner: winner,
     };
   }
@@ -240,6 +238,10 @@ const RoundProvider = (props) => {
   const triggerStand = () => {
     dispatchRoundAction({ type: "STAND" });
   };
+
+  const findWinner = () => {
+    dispatchRoundAction({ type: "WINNER" });
+  };
   const roundContext = {
     cards: roundState.cards,
     computerCards: roundState.computerCards,
@@ -247,11 +249,13 @@ const RoundProvider = (props) => {
     computerPoint: roundState.computerPoint,
     playerPoint: roundState.playerPoint,
     gameState: roundState.gameState,
+    winner: roundState.winner,
     randomCard: randomCardToStart,
     triggerDeal: triggerDeal,
     triggerStand: triggerStand,
     addResult: addResult,
     addCard: addCard,
+    findWinner: findWinner,
   };
 
   return (
