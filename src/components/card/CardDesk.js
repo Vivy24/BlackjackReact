@@ -2,6 +2,7 @@ import {useContext, useEffect} from 'react'
 
 import ComputerCard from './ComputerCard'
 import Score from './Score'
+import Winner from './Winner' 
 import PlayerCard from './PlayerCard'
 
 import roundContext from '../../store/round'
@@ -20,6 +21,7 @@ const CardDesk = () => {
     return (
         <div>
             <ComputerCard/>
+            <Winner/>
             <Score />
             <PlayerCard />
         </div>

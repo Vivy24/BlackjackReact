@@ -7,11 +7,14 @@ const RoundContext = React.createContext({
     playerCards:[],
     computerPoint:[],
     playerPoint:[],
-    isDeal: false,
-    addPlayerCard:()=>{},
+    gameState:'',
+    winner:'',
+    addCard:({storage, point,addType})=>{},
     randomCard:()=>{},
     triggerDeal:()=>{},
-    addResult:(addType)=>{}
+    triggerStand:()=>{},
+    addResult:(addType)=>{},
+    findWinner:()=>{},
     // resetRound:()=>{},
 })
 

@@ -33,3 +33,7 @@
   .button-24:active {
     opacity: .5;
   }
+
+  .button-24:disabled{
+    background-color: grey;
+  }

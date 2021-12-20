@@ -1,4 +1,4 @@
-import {useContext, Fragment} from 'react'
+import {useContext, useEffect, Fragment} from 'react'
 
 import classes from './PlayerCard.module.css'
 import PlayingCard from './PlayingCard'
@@ -8,17 +8,31 @@ import roundContext from '../../store/round'
 
 
 const PlayerCard = () => {
+  
     const roundCtx = useContext(roundContext);
     console.log(roundCtx);
+
+    useEffect(()=>{
+      if(roundCtx.playerPoint.length === 0){
+        standTrigger();
+     }
+    },[roundCtx.playerPoint.length])
 
     const dealTrigger = () => {
         roundCtx.triggerDeal();
     }
 
-    const hitTrigger = () => {
-        roundCtx.addPlayerCard();
+      
+    const standTrigger = () => {
+      // to do: check diem computer 
+      roundCtx.triggerStand();
+      console.log("Stand get triggered");
     }
-   
+
+    const hitTrigger = () => {
+        roundCtx.addCard({storage: roundCtx.playerCards ,point:roundCtx.playerPoint ,addType: 'P'});
+    }
+ 
     return (
       <div className={classes.playerCard}>
         <div className={classes.card}>
@@ -26,7 +40,7 @@ const PlayerCard = () => {
             <Fragment>
               <PlayingCard
                 img={
-                  roundCtx.isDeal
+                  roundCtx.gameState==='DEAL' ||  roundCtx.gameState==='STAND'
                     ? roundCtx.playerCards[0].img
                     : "img/cards/facingdown.png"
                 }
@@ -34,7 +48,7 @@ const PlayerCard = () => {
               />
               <PlayingCard
                 img={
-                  roundCtx.isDeal
+                  roundCtx.gameState==='DEAL' ||  roundCtx.gameState==='STAND'
                     ? roundCtx.playerCards[1].img
                     : "img/cards/facingdown.png"
                 }
@@ -49,9 +63,9 @@ const PlayerCard = () => {
             })}
         </div>
         <div className={classes.button}>
-          <Button onClick={dealTrigger}>Deal</Button>
-          <Button onClick={hitTrigger}>Hit</Button>
-          <Button>Stand</Button>
+          <Button  onClick={dealTrigger} invalid ={!roundCtx.gameState == ""}>Deal</Button>
+          <Button onClick={hitTrigger} invalid ={!(roundCtx.gameState === "DEAL" && roundCtx.gameState !== 'STAND')}>Hit</Button>
+          <Button onClick= {standTrigger} invalid ={!(roundCtx.gameState === "DEAL")}>Stand</Button>
         </div>
       </div>
     );

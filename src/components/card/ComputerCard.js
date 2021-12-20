@@ -11,8 +11,8 @@ const ComputerCard = () => {
 
     return (
         <div className={classes.computerCard}>
-            <PlayingCard img={roundCtx.isDeal ? roundCtx.computerCards[0].img:'img/cards/facingdown.png'} id="facingdown"/>   
-            <PlayingCard img={'img/cards/facingdown.png'} id="facingdown"/>   
+            <PlayingCard img={roundCtx.gameState==='DEAL' || roundCtx.gameState === 'STAND' ? roundCtx.computerCards[0].img:'img/cards/facingdown.png'} id="facingdown"/>   
+            <PlayingCard img={roundCtx.gameState === 'STAND'? roundCtx.computerCards[1].img:'img/cards/facingdown.png'} id="facingdown"/>   
         </div>
     )
 }
