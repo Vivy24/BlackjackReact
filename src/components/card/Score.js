@@ -43,5 +43,3 @@ const Score = () => {
 };
 
 export default Score;
-
-//roundCtx.gameState ==='' && roundCtx.gameState !=='STAND' ? dealScore() : 0

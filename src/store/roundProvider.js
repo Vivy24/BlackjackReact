@@ -31,6 +31,7 @@ const roundReducer = (state, action) => {
     cards.splice(computerCard1Index, 1);
 
     const computerCard2 = randomCard();
+
     const computerCard2Index = cards.indexOf(computerCard2);
     updatedComputerCards.push(computerCard2);
     cards.splice(computerCard2Index, 1);
@@ -75,7 +76,12 @@ const roundReducer = (state, action) => {
           return (point += 10);
         });
 
+        const point3 = scores.map((point) => {
+          return (point += 11);
+        });
+
         updatedScore = point1.concat(point2);
+        updatedScore = updatedScore.concat(point3);
       } else {
         updatedScore = scores.map((score) => {
           return (score += newCard.point);
@@ -114,6 +120,7 @@ const roundReducer = (state, action) => {
     if (action.cardtype === "C") {
       const computerCards = [...state.computerCards];
       let computerPoints = [...state.computerPoint];
+      let maximumComputerPoint = 0;
       computerCards.forEach((card) => {
         if (!card.point) {
           const computerPoint1 = computerPoints.map((point) => {
@@ -123,8 +130,12 @@ const roundReducer = (state, action) => {
           const computerPoint2 = computerPoints.map((point) => {
             return (point += 10);
           });
+          const computerPoint3 = computerPoints.map((point) => {
+            return (point += 11);
+          });
 
           computerPoints = computerPoint1.concat(computerPoint2);
+          computerPoints = computerPoints.concat(computerPoint3);
         } else {
           const computerPoint = computerPoints.map((point) => {
             return (point += card.point);
@@ -132,7 +143,6 @@ const roundReducer = (state, action) => {
           computerPoints = computerPoint;
         }
       });
-
       return {
         ...state,
         computerPoint: computerPoints,
@@ -150,8 +160,11 @@ const roundReducer = (state, action) => {
           const playerPoint2 = playerPoints.map((point) => {
             return (point += 10);
           });
-
+          const playerPoint3 = playerPoints.map((point) => {
+            return (point += 11);
+          });
           playerPoints = playerPoint1.concat(playerPoint2);
+          playerPoints = playerPoints.concat(playerPoint3);
         } else {
           const playerPoint = playerPoints.map((point) => {
             return (point += card.point);

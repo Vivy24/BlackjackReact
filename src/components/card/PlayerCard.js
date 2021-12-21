@@ -17,7 +17,15 @@ const PlayerCard = () => {
   }, [roundCtx.playerPoint.length]);
 
   const dealTrigger = () => {
-    roundCtx.triggerDeal();
+    if (
+      Math.max(...roundCtx.computerPoint) >= 21 ||
+      Math.max(...roundCtx.playerPoint) >= 21
+    ) {
+      roundCtx.triggerStand();
+      roundCtx.findWinner();
+    } else {
+      roundCtx.triggerDeal();
+    }
   };
 
   const standTrigger = () => {
