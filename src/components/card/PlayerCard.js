@@ -1,4 +1,4 @@
-import { useContext, useEffect, Fragment } from "react";
+import { useContext, useEffect, Fragment, useCallback } from "react";
 
 import classes from "./PlayerCard.module.css";
 import PlayingCard from "./PlayingCard";
@@ -9,25 +9,7 @@ import roundContext from "../../store/round";
 const PlayerCard = () => {
   const roundCtx = useContext(roundContext);
 
-  useEffect(() => {
-    if (roundCtx.playerPoint.length === 0) {
-      standTrigger();
-    }
-  }, [roundCtx.playerPoint.length]);
-
-  const dealTrigger = () => {
-    if (
-      Math.max(...roundCtx.computerPoint) >= 21 ||
-      Math.max(...roundCtx.playerPoint) >= 21
-    ) {
-      roundCtx.triggerStand();
-      roundCtx.findWinner();
-    } else {
-      roundCtx.triggerDeal();
-    }
-  };
-
-  const standTrigger = () => {
+  const standTrigger = useCallback(() => {
     if (
       (roundCtx.computerPoint.length === 1 && roundCtx.computerPoint[0] < 16) ||
       (roundCtx.computerPoint.length > 1 &&
@@ -42,6 +24,18 @@ const PlayerCard = () => {
 
     roundCtx.triggerStand();
     roundCtx.findWinner();
+  }, []);
+
+  const dealTrigger = () => {
+    if (
+      Math.max(...roundCtx.computerPoint) >= 21 ||
+      Math.max(...roundCtx.playerPoint) >= 21
+    ) {
+      roundCtx.triggerStand();
+      roundCtx.findWinner();
+    } else {
+      roundCtx.triggerDeal();
+    }
   };
 
   const hitTrigger = () => {
@@ -51,6 +45,12 @@ const PlayerCard = () => {
       addType: "P",
     });
   };
+
+  useEffect(() => {
+    if (roundCtx.playerPoint.length === 0) {
+      standTrigger();
+    }
+  }, [roundCtx.playerPoint.length, standTrigger]);
 
   return (
     <div className={classes.playerCard}>

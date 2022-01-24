@@ -39,7 +39,7 @@ const Winner = () => {
             </h2>
             <h3>
               {" "}
-              {roundCtx.winner != "DRAW"
+              {roundCtx.winner !== "DRAW"
                 ? `The winner is: ${roundCtx.winner}`
                 : "DRAW"}
             </h3>

@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import ComputerCard from "./ComputerCard";
 import Score from "./Score";
@@ -9,14 +9,14 @@ import roundContext from "../../store/round";
 
 const CardDesk = () => {
   const roundCtx = useContext(roundContext);
-  let initalizeFirst = false;
+  const [initalizeFirst, setInitalizeFirst] = useState(false);
 
   useEffect(() => {
     roundCtx.randomCard();
     roundCtx.addResult("C");
     roundCtx.addResult("P");
 
-    initalizeFirst = true;
+    setInitalizeFirst(true);
   }, []);
 
   useEffect(() => {
