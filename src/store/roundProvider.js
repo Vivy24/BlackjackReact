@@ -46,13 +46,24 @@ const roundReducer = (state, action) => {
     const playerCard2Index = cards.indexOf(playerCard2);
     updatedPlayerCards.push(playerCard2);
     cards.splice(playerCard2Index, 1);
-
-    return {
-      ...state,
-      cards,
-      computerCards: updatedComputerCards,
-      playerCards: updatedPlayerCards,
-    };
+    if (action.card === "start") {
+      return {
+        ...state,
+        cards,
+        computerCards: updatedComputerCards,
+        playerCards: updatedPlayerCards,
+      };
+    } else {
+      return {
+        cards,
+        computerCards: updatedComputerCards,
+        playerCards: updatedPlayerCards,
+        computerPoint: [0],
+        playerPoint: [0],
+        gameState: "",
+        winner: "",
+      };
+    }
   } else if (action.type === "ADD-CARD") {
     const cards = [...state.cards];
     const updatedCards = [...action.storage];
@@ -100,8 +111,6 @@ const roundReducer = (state, action) => {
       }
     } while (action.cardType === "C" && drawMore);
 
-    console.log({ validScores });
-
     if (action.cardType === "C") {
       return {
         ...state,
@@ -120,7 +129,6 @@ const roundReducer = (state, action) => {
     if (action.cardtype === "C") {
       const computerCards = [...state.computerCards];
       let computerPoints = [...state.computerPoint];
-      let maximumComputerPoint = 0;
       computerCards.forEach((card) => {
         if (!card.point) {
           const computerPoint1 = computerPoints.map((point) => {
@@ -219,6 +227,7 @@ const roundReducer = (state, action) => {
       winner: winner,
     };
   }
+
   return defaultRoundContext;
 };
 
@@ -229,7 +238,7 @@ const RoundProvider = (props) => {
   );
 
   const randomCardToStart = () => {
-    dispatchRoundAction({ type: "RANDOM" });
+    dispatchRoundAction({ type: "RANDOM", card: "start" });
   };
 
   const triggerDeal = () => {
@@ -255,6 +264,10 @@ const RoundProvider = (props) => {
   const findWinner = () => {
     dispatchRoundAction({ type: "WINNER" });
   };
+
+  const resetRound = () => {
+    dispatchRoundAction({ type: "RANDOM", card: "reset" });
+  };
   const roundContext = {
     cards: roundState.cards,
     computerCards: roundState.computerCards,
@@ -269,6 +282,7 @@ const RoundProvider = (props) => {
     addResult: addResult,
     addCard: addCard,
     findWinner: findWinner,
+    resetRound: resetRound,
   };
 
   return (

@@ -8,7 +8,6 @@ import roundContext from "../../store/round";
 
 const PlayerCard = () => {
   const roundCtx = useContext(roundContext);
-  console.log(roundCtx);
 
   useEffect(() => {
     if (roundCtx.playerPoint.length === 0) {
@@ -43,7 +42,6 @@ const PlayerCard = () => {
 
     roundCtx.triggerStand();
     roundCtx.findWinner();
-    console.log("Stand get triggered");
   };
 
   const hitTrigger = () => {
@@ -57,7 +55,7 @@ const PlayerCard = () => {
   return (
     <div className={classes.playerCard}>
       <div className={classes.card}>
-        {roundCtx.playerCards.length == 2 && (
+        {roundCtx.playerCards.length === 2 && (
           <Fragment>
             <PlayingCard
               img={

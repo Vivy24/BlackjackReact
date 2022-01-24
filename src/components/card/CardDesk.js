@@ -25,7 +25,6 @@ const CardDesk = () => {
         Math.max(...roundCtx.computerPoint) >= 21 ||
         Math.max(...roundCtx.playerPoint) >= 21
       ) {
-        console.log("winner xi dach");
         roundCtx.triggerStand();
         roundCtx.findWinner();
       }
