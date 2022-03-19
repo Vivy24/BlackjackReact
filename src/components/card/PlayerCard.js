@@ -6,51 +6,14 @@ import Button from "../UI/button";
 
 import roundContext from "../../store/round";
 
-const PlayerCard = () => {
+const PlayerCard = (props) => {
   const roundCtx = useContext(roundContext);
-
-  const standTrigger = useCallback(() => {
-    if (
-      (roundCtx.computerPoint.length === 1 && roundCtx.computerPoint[0] < 16) ||
-      (roundCtx.computerPoint.length > 1 &&
-        Math.max(...roundCtx.computerPoint) < 16)
-    ) {
-      roundCtx.addCard({
-        storage: roundCtx.computerCards,
-        point: roundCtx.computerPoint,
-        addType: "C",
-      });
-    }
-
-    roundCtx.triggerStand();
-    roundCtx.findWinner();
-  }, []);
-
-  const dealTrigger = () => {
-    if (
-      Math.max(...roundCtx.computerPoint) >= 21 ||
-      Math.max(...roundCtx.playerPoint) >= 21
-    ) {
-      roundCtx.triggerStand();
-      roundCtx.findWinner();
-    } else {
-      roundCtx.triggerDeal();
-    }
-  };
-
-  const hitTrigger = () => {
-    roundCtx.addCard({
-      storage: roundCtx.playerCards,
-      point: roundCtx.playerPoint,
-      addType: "P",
-    });
-  };
 
   useEffect(() => {
     if (roundCtx.playerPoint.length === 0) {
-      standTrigger();
+      props.standTrigger();
     }
-  }, [roundCtx.playerPoint.length, standTrigger]);
+  }, [roundCtx.playerPoint.length, props.standTrigger]);
 
   return (
     <div className={classes.playerCard}>
@@ -82,11 +45,11 @@ const PlayerCard = () => {
           })}
       </div>
       <div className={classes.button}>
-        <Button onClick={dealTrigger} invalid={!roundCtx.gameState == ""}>
+        <Button onClick={props.dealTrigger} invalid={!roundCtx.gameState == ""}>
           Deal
         </Button>
         <Button
-          onClick={hitTrigger}
+          onClick={props.hitTrigger}
           invalid={
             !(roundCtx.gameState === "DEAL" && roundCtx.gameState !== "STAND")
           }
@@ -94,7 +57,7 @@ const PlayerCard = () => {
           Hit
         </Button>
         <Button
-          onClick={standTrigger}
+          onClick={props.standTrigger}
           invalid={
             !(
               roundCtx.gameState === "DEAL" &&

@@ -66,59 +66,43 @@ const roundReducer = (state, action) => {
     }
   } else if (action.type === "ADD-CARD") {
     const cards = [...state.cards];
+
     const updatedCards = [...action.storage];
+
     let scores = [...action.point];
 
     let updatedScore = [];
     let validScores;
-    let drawMore = false;
-    do {
-      const newCard = randomCard();
-      updatedCards.push(newCard);
-      const newCardIndex = cards.indexOf(newCard);
-      cards.splice(newCardIndex, 1);
+    const newCard = randomCard();
+    updatedCards.push(newCard);
+    const newCardIndex = cards.indexOf(newCard);
+    cards.splice(newCardIndex, 1);
 
-      if (!newCard.point) {
-        const point1 = scores.map((point) => {
-          return (point += 1);
-        });
-
-        const point2 = scores.map((point) => {
-          return (point += 10);
-        });
-
-        const point3 = scores.map((point) => {
-          return (point += 11);
-        });
-
-        updatedScore = point1.concat(point2);
-        updatedScore = updatedScore.concat(point3);
-      } else {
-        updatedScore = scores.map((score) => {
-          return (score += newCard.point);
-        });
-      }
-
-      validScores = updatedScore.filter((score) => {
-        return score <= 21;
+    if (!newCard.point) {
+      const point1 = scores.map((point) => {
+        return (point += 1);
       });
-      drawMore =
-        (validScores.length === 1 && validScores[0] < 16) ||
-        (validScores.length > 1 && Math.max(...validScores) < 16);
 
-      if (drawMore) {
-        scores = [...validScores];
-      }
-    } while (action.cardType === "C" && drawMore);
+      const point2 = scores.map((point) => {
+        return (point += 10);
+      });
 
-    if (action.cardType === "C") {
-      return {
-        ...state,
-        cards,
-        computerCards: updatedCards,
-        computerPoint: validScores,
-      };
+      const point3 = scores.map((point) => {
+        return (point += 11);
+      });
+
+      updatedScore = point1.concat(point2);
+      updatedScore = updatedScore.concat(point3);
+    } else {
+      updatedScore = scores.map((score) => {
+        return (score += newCard.point);
+      });
     }
+
+    validScores = updatedScore.filter((score) => {
+      return score <= 21;
+    });
+
     return {
       ...state,
       cards,
@@ -129,6 +113,7 @@ const roundReducer = (state, action) => {
     if (action.cardtype === "C") {
       const computerCards = [...state.computerCards];
       let computerPoints = [...state.computerPoint];
+
       computerCards.forEach((card) => {
         if (!card.point) {
           const computerPoint1 = computerPoints.map((point) => {
@@ -192,8 +177,32 @@ const roundReducer = (state, action) => {
       gameState: "DEAL",
     };
   } else if (action.type === "STAND") {
+    const computerPoints = [...state.computerPoint];
+    const computerCard = [...state.computerCards];
+
+    let computerNewPoints = [];
+    let computerPoint =
+      computerPoints.length > 1
+        ? Math.max(...computerPoints)
+        : computerPoints[0];
+
+    while (computerPoint < 16) {
+      const newCard = randomCard();
+      computerCard.push(newCard);
+      if (!newCard.point) {
+        computerPoint += 10;
+      } else {
+        computerPoint += newCard.point;
+      }
+    }
+
+    computerNewPoints.push(computerPoint);
+
+    computerNewPoints = computerNewPoints.filter((point) => point <= 21);
     return {
       ...state,
+      computerCards: computerCard,
+      computerPoint: computerNewPoints,
       gameState: "STAND",
     };
   } else if (action.type === "WINNER") {
@@ -249,12 +258,19 @@ const RoundProvider = (props) => {
     dispatchRoundAction({ type: "ADD-RESULTS", cardtype: addType });
   };
 
-  const addCard = ({ storage, point, addType }) => {
+  const addCard = ({ storage, point }) => {
     dispatchRoundAction({
       type: "ADD-CARD",
       storage,
       point,
-      cardType: addType,
+    });
+  };
+
+  const addComputerCard = ({ storage, point }) => {
+    dispatchRoundAction({
+      type: "ADD-COMPUTER-CARD",
+      storage,
+      point,
     });
   };
   const triggerStand = () => {
@@ -268,6 +284,7 @@ const RoundProvider = (props) => {
   const resetRound = () => {
     dispatchRoundAction({ type: "RANDOM", card: "reset" });
   };
+
   const roundContext = {
     cards: roundState.cards,
     computerCards: roundState.computerCards,
@@ -281,6 +298,7 @@ const RoundProvider = (props) => {
     triggerStand: triggerStand,
     addResult: addResult,
     addCard: addCard,
+    addComputerCard: addComputerCard,
     findWinner: findWinner,
     resetRound: resetRound,
   };

@@ -1,4 +1,4 @@
-import { useContext, Fragment } from "react";
+import { useContext, Fragment, useState, useEffect } from "react";
 
 import classes from "./ComputerCard.module.css";
 import PlayingCard from "./PlayingCard";
@@ -8,14 +8,19 @@ import roundContext from "../../store/round";
 const ComputerCard = () => {
   const roundCtx = useContext(roundContext);
 
+  const [computerCard, setComputerCard] = useState([]);
+  useEffect(() => {
+    setComputerCard(roundCtx.computerCards);
+  }, [roundCtx]);
+
   return (
     <div className={classes.computerCard}>
-      {roundCtx.computerCards.length === 2 && (
+      {computerCard.length === 2 && (
         <Fragment>
           <PlayingCard
             img={
               roundCtx.gameState === "DEAL" || roundCtx.gameState === "STAND"
-                ? roundCtx.computerCards[0].img
+                ? computerCard[0].img
                 : "img/cards/facingdown.png"
             }
             id="facingdown"
@@ -23,7 +28,7 @@ const ComputerCard = () => {
           <PlayingCard
             img={
               roundCtx.gameState === "STAND"
-                ? roundCtx.computerCards[1].img
+                ? computerCard[1].img
                 : "img/cards/facingdown.png"
             }
             id="facingdown"
@@ -31,9 +36,9 @@ const ComputerCard = () => {
         </Fragment>
       )}
 
-      {roundCtx.computerCards.length > 2 &&
+      {computerCard.length > 2 &&
         roundCtx.gameState === "STAND" &&
-        roundCtx.computerCards.map((card) => {
+        computerCard.map((card) => {
           return <PlayingCard key={card.id} img={card.img}></PlayingCard>;
         })}
     </div>

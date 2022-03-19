@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 
 import ComputerCard from "./ComputerCard";
 import Score from "./Score";
@@ -31,12 +31,47 @@ const CardDesk = () => {
     }
   }, [initalizeFirst]);
 
+  const callingTrigger = useCallback(async () => {
+    await roundCtx.triggerStand();
+  }, []);
+
+  const standTrigger = useCallback(() => {
+    callingTrigger().then(() => {
+      roundCtx.findWinner();
+    });
+  }, []);
+
+  const dealTrigger = () => {
+    if (
+      Math.max(...roundCtx.computerPoint) >= 21 ||
+      Math.max(...roundCtx.playerPoint) >= 21
+    ) {
+      roundCtx.triggerStand();
+      roundCtx.findWinner();
+    } else {
+      roundCtx.triggerDeal();
+    }
+  };
+
+  const hitTrigger = () => {
+    roundCtx.addCard({
+      storage: roundCtx.playerCards,
+      point: roundCtx.playerPoint,
+    });
+  };
+
+  console.log(roundCtx.computerCards);
+
   return (
     <div>
       <ComputerCard />
       {roundCtx.gameState === "STAND" ? <Winner /> : <Score />}
 
-      <PlayerCard />
+      <PlayerCard
+        standTrigger={standTrigger}
+        dealTrigger={dealTrigger}
+        hitTrigger={hitTrigger}
+      />
     </div>
   );
 };
