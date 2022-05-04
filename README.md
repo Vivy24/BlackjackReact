@@ -1,44 +1,57 @@
-# Getting Started with Create React App
+# BlackJackReact-Compete With Computer In A BlackJack Game
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Website Address (Hosted By Vercel)
+https://blackjack-reactjs.vercel.app/
 
-## Available Scripts
+# How To Start:
 
-In the project directory, you can run:
+    1. Clone this project
+    2. Run 'npm install'
+    3. Run 'npm start'
+    
+# Languages:
 
-### `npm start`
+    1. Front-end: ReactJS, HTML
+    2. State Changing: React Context
+    3  Styles: Native Module CSS
+    4. Main Language: Javascript
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+# Usage:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+    1. User can deal, hit or stand while competing to the computer
+    2. Has all possibilities win, lose or tie case
+    3. Prevent standing while do not have enough point (17) && computer will automatical draw more card when does not have enough point
+    4. Has 3 different ways to calculate an A(1, 10, 11) in blackjack
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Showcase:
 
-### `npm run build`
+## Landing Page
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+![Landing](blackJack/landing.png)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Begin Phase
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+![Begin Phase](blackJack/state1.png)
 
-### `npm run eject`
+## In Round Phase
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+![In Round Phase](blackJack/begin.png)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Announce Winner
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+![Announce Winner](blackJack/finish.png)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Not Allow To Stand Phase
 
-# Description 
-## A blackjack game created by ReactJs using ReactContext 
-## Link to website: https://blackjack-reactjs.vercel.app/
+![Not Allow To Stand Phase](blackJack/notenoughtostand.png)
+
+## Draw Case
+
+![Draw Case](blackJack/drawcase.png)
+
+## Busted Case
+
+![Busted Case](blackJack/bustedcase.png)
+
+
